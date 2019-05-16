@@ -2,6 +2,13 @@
   "name": "root",
   "private": true,
   "devDependencies": {
-    "lerna": "^3.13.4"
+    "ava": "^1.4.1",
+    "lerna": "^3.13.4",
+    "rollup": "^1.12.1",
+    "rollup-plugin-typescript2": "^0.21.0",
+    "typescript": "^3.4.5"
+  },
+  "dependencies": {
+    "modeltyped-core": "file:packages/modeltyped-core"
   }
 }

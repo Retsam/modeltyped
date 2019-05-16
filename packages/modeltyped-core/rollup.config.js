@@ -7,6 +7,7 @@ export default {
       file: 'dist/modeltyped.js',
       format: 'cjs'
     },
+    external: ["lodash.assign"],
     plugins: [ typescriptPlugin({
         typescript: typescript,
         tsconfigOverride: {
