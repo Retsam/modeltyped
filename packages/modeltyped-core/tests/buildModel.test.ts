@@ -53,3 +53,55 @@ test("undefined properties are optional for construction", t => {
 
     t.assert(model.favoriteColor === "Red");
 });
+
+const numberS: Serializer<number, number> = {
+    fromJSON: s => s,
+    toJSON: s => s,
+};
+
+test("can define model actions", t => {
+    const TestModel = buildModel({
+        x: numberS,
+    }).extend(self => ({
+        plus: (y: number) => self.x + y,
+    }));
+
+    const model = TestModel.create({ x: 5 });
+    t.assert(model.plus(7) === 12);
+});
+
+test("can define model-only fields", t => {
+    const TestModel = buildModel({
+        x: numberS,
+    }).extend(self => ({
+        get twoX() {
+            return self.x + self.x;
+        },
+    }));
+    const model = TestModel.create({ x: 5 });
+    t.assert(model.twoX === 10);
+    t.deepEqual(model.unwrap(), {
+        x: 5,
+        // Does not include twoX, was a model only property
+    });
+});
+
+test("can define extras that reference other extras", t => {
+    const TestModel = buildModel({
+        value: stringS,
+    })
+        .extend(self => ({
+            get loudValue() {
+                return self.value.toUpperCase();
+            },
+        }))
+        .extend(self => ({
+            get loudValueTwice() {
+                return self.loudValue + " " + self.loudValue;
+            },
+        }));
+
+    const model = TestModel.create({ value: "hodor" });
+    t.assert(model.loudValue === "HODOR");
+    t.assert(model.loudValueTwice === "HODOR HODOR");
+});
