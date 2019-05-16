@@ -1,0 +1,9 @@
+{
+    "extends": "../tsconfig-base.json",
+    "compilerOptions": {
+      "target": "es5",
+      "types": [],
+      "composite": true,
+      "outDir": "../dist/lib",
+    }
+  }

@@ -1,0 +1,9 @@
+// Main entry point for the project, controls no files, but specifies all of the sub-projects.
+{
+    "extends": "./tsconfig-base",
+    "references": [
+        {"path": "./lib"},
+        {"path": "./tests"}
+    ],
+    "files": []
+}

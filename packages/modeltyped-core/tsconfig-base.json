@@ -1,0 +1,15 @@
+// The base configuration for typescript settings:
+// Separated from the project's entry point (tsconfig.json) so that sub-projects can
+//   inherit from this without inheriting `files: []` from tsconfig.json
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "strict": true,
+    "baseUrl": "./lib",
+    // Empty types array, so sub-projects need to specify which typings they depend on
+    //  and so typings don't 'leak' between projects.
+    "types": [],
+    "esModuleInterop": true
+  }
+}

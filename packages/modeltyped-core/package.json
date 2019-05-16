@@ -1,0 +1,23 @@
+{
+  "name": "modeltyped-core",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Retsam <chess19@gmail.com>",
+  "license": "MIT",
+  "main": "dist/modeltyped.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "npx tsc --build tsconfig.json",
+    "dist": "npx rollup -c",
+    "run_tests": "NODE_PATH=dist/lib npx ava",
+    "test": "npm run build && npm run run_tests"
+  },
+  "devDependencies": {
+    "ava": "^1.4.1",
+    "rollup": "^1.12.1",
+    "rollup-plugin-typescript2": "^0.21.0",
+    "typescript": "^3.4.5"
+  }
+}
