@@ -12,6 +12,10 @@ export type OptionalFromUndefined<T> = Partial<
 > &
     Pick<T, RequiredPropertyNames<T>>;
 
+// NoInfer
+type ObjectType<T> = { [k in keyof T]: T[k] };
+export type NoInfer<T> = T & ObjectType<T>;
+
 // mapValues
 export function mapValues<U, O>(
     o: U,

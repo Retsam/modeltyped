@@ -1,15 +1,12 @@
 import test from "ava";
-import { Serializer, buildModel } from "modeltyped";
+import { buildModel, types } from "modeltyped";
 
-const stringS: Serializer<string, string> = {
-    fromJSON: s => s,
-    toJSON: s => s,
-};
+const { string: stringT, optional: optionalT, number: numberT } = types;
 
 test("can define properties", t => {
     const TestModel = buildModel({
-        foo: stringS,
-        bar: stringS,
+        foo: stringT,
+        bar: stringT,
     });
 
     const model = TestModel.create({
@@ -28,7 +25,7 @@ test("can define properties", t => {
 
 test("unwrap returns the current value of properties", t => {
     const TestModel = buildModel({
-        name: stringS,
+        name: types.string,
     });
     const model = TestModel.create({ name: "Anakin" });
     model.name = "Vader";
@@ -37,31 +34,18 @@ test("unwrap returns the current value of properties", t => {
     });
 });
 
-const optionalS = <In, Out>(
-    s: Serializer<In, Out>,
-    defaultValue: In,
-): Serializer<In | undefined, Out, In> => ({
-    fromJSON: val => s.fromJSON(val || defaultValue),
-    toJSON: val => s.toJSON(val),
-});
-
 test("undefined properties are optional for construction", t => {
     const TestModel = buildModel({
-        favoriteColor: optionalS(stringS, "Red"),
+        favoriteColor: optionalT(stringT),
     });
     const model = TestModel.create({});
 
-    t.assert(model.favoriteColor === "Red");
+    t.assert(model.favoriteColor === undefined);
 });
-
-const numberS: Serializer<number, number> = {
-    fromJSON: s => s,
-    toJSON: s => s,
-};
 
 test("can define model actions", t => {
     const TestModel = buildModel({
-        x: numberS,
+        x: numberT,
     }).extend(self => ({
         plus: (y: number) => self.x + y,
     }));
@@ -72,7 +56,7 @@ test("can define model actions", t => {
 
 test("can define model-only fields", t => {
     const TestModel = buildModel({
-        x: numberS,
+        x: numberT,
     }).extend(self => ({
         get twoX() {
             return self.x + self.x;
@@ -88,7 +72,7 @@ test("can define model-only fields", t => {
 
 test("can define extras that reference other extras", t => {
     const TestModel = buildModel({
-        value: stringS,
+        value: stringT,
     })
         .extend(self => ({
             get loudValue() {
