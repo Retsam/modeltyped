@@ -17,19 +17,19 @@ test("can define properties", t => {
     t.assert(model.foo === "FOO");
     t.assert(model.bar === "BAR");
 
-    t.deepEqual(model.unwrap(), {
+    t.deepEqual(model.toJSON(), {
         foo: "FOO",
         bar: "BAR",
     });
 });
 
-test("unwrap returns the current value of properties", t => {
+test("toJSON returns the current value of properties", t => {
     const TestModel = buildModel({
         name: types.string,
     });
     const model = TestModel.create({ name: "Anakin" });
     model.name = "Vader";
-    t.deepEqual(model.unwrap(), {
+    t.deepEqual(model.toJSON(), {
         name: "Vader",
     });
 });
@@ -64,7 +64,7 @@ test("can define model-only fields", t => {
     }));
     const model = TestModel.create({ x: 5 });
     t.assert(model.twoX === 10);
-    t.deepEqual(model.unwrap(), {
+    t.deepEqual(model.toJSON(), {
         x: 5,
         // Does not include twoX, was a model only property
     });

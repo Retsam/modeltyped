@@ -13,14 +13,14 @@ export type ModelConstructorData<
     Props extends PropertiesDefs
 > = OptionalFromUndefined<{ [P in keyof Props]: TypeDefInput<Props[P]> }>;
 
-export type ModelUnwrapData<Props extends PropertiesDefs> = {
+export type ModelOutputData<Props extends PropertiesDefs> = {
     [P in keyof Props]: TypeDefOutput<Props[P]>
 };
 
 export type ModelInstance<Props extends PropertiesDefs, Extras> = {
     [P in keyof Props]: TypeDefInstance<Props[P]>
 } & {
-    unwrap(): ModelUnwrapData<Props>;
+    toJSON(): ModelOutputData<Props>;
 } & Extras;
 
 type ExtenderFunc<
@@ -58,7 +58,7 @@ export class ModelDefinition<
         });
         const instance = {
             ...props,
-            unwrap() {
+            toJSON() {
                 return mapValues(propDef, ({ toJSON }, propName) => {
                     return toJSON((instance as any)[propName]);
                 });

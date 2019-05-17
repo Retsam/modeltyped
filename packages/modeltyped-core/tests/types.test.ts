@@ -4,7 +4,7 @@ import {
     types,
     ModelConstructorData,
     PropertiesDefs,
-    ModelUnwrapData,
+    ModelOutputData,
     TypeDefinition,
 } from "modeltyped";
 
@@ -12,11 +12,11 @@ const unwrapTest = <Def extends PropertiesDefs>(
     testName: string,
     def: Def,
     data: ModelConstructorData<Def>,
-    unwrap: ModelUnwrapData<Def>,
+    unwrap: ModelOutputData<Def>,
 ) =>
     test(testName, t => {
         const model = buildModel(def).create(data);
-        t.deepEqual(model.unwrap(), unwrap);
+        t.deepEqual(model.toJSON(), unwrap);
     });
 
 const { value: valueT } = types;

@@ -8,7 +8,7 @@ import {
     ModelDefinition,
     ModelConstructorData,
     ModelInstance,
-    ModelUnwrapData,
+    ModelOutputData,
 } from "buildModel";
 import { mapValues, NoInfer } from "tsUtils";
 
@@ -80,10 +80,10 @@ export function model<M extends ModelDefinition<any, any>>(
 ): TypeDefinition<
     ModelConstructorData<ModelProps<M>>,
     ModelInstance<ModelProps<M>, ModelExtras<M>>,
-    ModelUnwrapData<ModelProps<M>>
+    ModelOutputData<ModelProps<M>>
 > {
     return {
         fromJSON: input => Model.create(input),
-        toJSON: model => model.unwrap(),
+        toJSON: model => model.toJSON(),
     };
 }
