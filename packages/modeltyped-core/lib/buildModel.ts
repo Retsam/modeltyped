@@ -21,6 +21,7 @@ export type ModelInstance<Props extends PropertiesDefs, Extras> = {
     [P in keyof Props]: TypeDefInstance<Props[P]>
 } & {
     toJSON(): ModelOutputData<Props>;
+    unwrap(): ModelOutputData<Props>;
 } & Extras;
 
 type ExtenderFunc<
@@ -56,13 +57,15 @@ export class ModelDefinition<
         const props = mapValues(propDef, ({ fromJSON }, propName) => {
             return fromJSON((data as any)[propName]);
         });
+        const toJSON = () => {
+            return mapValues(propDef, ({ toJSON }, propName) => {
+                return toJSON((instance as any)[propName]);
+            });
+        };
         const instance = {
             ...props,
-            toJSON() {
-                return mapValues(propDef, ({ toJSON }, propName) => {
-                    return toJSON((instance as any)[propName]);
-                });
-            },
+            toJSON,
+            unwrap: toJSON,
         } as ModelInstance<Props, Extras>;
         for (const extenderFunc of this.extenderFuncs) {
             assign(instance, extenderFunc(instance));
