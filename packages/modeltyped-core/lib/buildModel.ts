@@ -1,26 +1,24 @@
 import {
-    Serializer,
-    SerializerInputType,
-    SerializerOutputType,
-    SerializerInstanceType,
-} from "serializer";
+    TypeDefinition,
+    TypeDefInput,
+    TypeDefOutput,
+    TypeDefInstance,
+} from "typeDefinition";
 import { OptionalFromUndefined, mapValues } from "tsUtils";
 import assign from "lodash.assign";
 
-export type PropertiesDefs = Record<string, Serializer<any, any>>;
+export type PropertiesDefs = Record<string, TypeDefinition<any, any>>;
 
 export type ModelConstructorData<
     Props extends PropertiesDefs
-> = OptionalFromUndefined<
-    { [P in keyof Props]: SerializerInputType<Props[P]> }
->;
+> = OptionalFromUndefined<{ [P in keyof Props]: TypeDefInput<Props[P]> }>;
 
 export type ModelUnwrapData<Props extends PropertiesDefs> = {
-    [P in keyof Props]: SerializerOutputType<Props[P]>
+    [P in keyof Props]: TypeDefOutput<Props[P]>
 };
 
 export type ModelInstance<Props extends PropertiesDefs, Extras> = {
-    [P in keyof Props]: SerializerInstanceType<Props[P]>
+    [P in keyof Props]: TypeDefInstance<Props[P]>
 } & {
     unwrap(): ModelUnwrapData<Props>;
 } & Extras;

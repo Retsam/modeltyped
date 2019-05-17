@@ -5,7 +5,7 @@ import {
     ModelConstructorData,
     PropertiesDefs,
     ModelUnwrapData,
-    Serializer,
+    TypeDefinition,
 } from "modeltyped";
 
 const unwrapTest = <Def extends PropertiesDefs>(
@@ -64,7 +64,7 @@ unwrapTest(
 );
 
 test("defaultT supports asymetric types", t => {
-    const stringParserT: Serializer<string | number, number, number> = {
+    const stringParserT: TypeDefinition<string | number, number, number> = {
         fromJSON: strOrNum =>
             typeof strOrNum === "string" ? parseInt(strOrNum) : strOrNum,
         toJSON: num => num,
