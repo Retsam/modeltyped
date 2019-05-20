@@ -3,14 +3,14 @@ import {
     TypeDefInput,
     TypeDefOutput,
     TypeDefInstance,
-} from "typeDefinition";
+} from "./typeDefinition";
 import {
     ModelDefinition,
     ModelConstructorData,
     ModelInstance,
     ModelOutputData,
-} from "buildModel";
-import { mapValues, NoInfer } from "tsUtils";
+} from "./buildModel";
+import { mapValues, NoInfer } from "./tsUtils";
 
 export function value<T>(): TypeDefinition<T, T> {
     return {

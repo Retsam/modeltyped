@@ -3,8 +3,8 @@ import {
     TypeDefInput,
     TypeDefOutput,
     TypeDefInstance,
-} from "typeDefinition";
-import { OptionalFromUndefined, mapValues } from "tsUtils";
+} from "./typeDefinition";
+import { OptionalFromUndefined, mapValues } from "./tsUtils";
 import assign from "lodash.assign";
 
 export type PropertiesDefs = Record<string, TypeDefinition<any, any>>;

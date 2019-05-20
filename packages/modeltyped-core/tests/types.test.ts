@@ -6,7 +6,7 @@ import {
     PropertiesDefs,
     ModelOutputData,
     TypeDefinition,
-} from "modeltyped";
+} from "../lib/modeltyped";
 
 const unwrapTest = <Def extends PropertiesDefs>(
     testName: string,

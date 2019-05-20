@@ -1,5 +1,5 @@
 import test from "ava";
-import { buildModel, types } from "modeltyped";
+import { buildModel, types } from "../lib/modeltyped";
 
 const { string: stringT, optional: optionalT, number: numberT } = types;
 
