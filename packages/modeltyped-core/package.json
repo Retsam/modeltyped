@@ -9,6 +9,7 @@
   "directories": {
     "test": "tests"
   },
+  "files": ["dist"],
   "scripts": {
     "build": "npx tsc --build tsconfig.json",
     "dist": "npx rollup -c",
