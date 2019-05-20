@@ -5,6 +5,7 @@
   "author": "Retsam <chess19@gmail.com>",
   "license": "MIT",
   "main": "dist/modeltyped.js",
+  "types": "dist/modeltyped.d.ts",
   "directories": {
     "test": "tests"
   },
