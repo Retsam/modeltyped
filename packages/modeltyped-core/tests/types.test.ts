@@ -52,6 +52,31 @@ unwrapTest(
     { favoriteColor: undefined, favoritePokemon: "squirtle" },
 );
 
+unwrapTest(
+    "optional supports null as input, but returns undefined as output",
+    { favoriteColor: optionalT(stringT) },
+    { favoriteColor: null },
+    { favoriteColor: undefined },
+);
+
+const { nullable: nullableT } = types;
+unwrapTest(
+    "supports nullable types",
+    {
+        favoriteColor: nullableT(stringT),
+        favoritePokemon: nullableT(valueT<Pokemon>()),
+    },
+    { favoritePokemon: "squirtle" },
+    { favoriteColor: null, favoritePokemon: "squirtle" },
+);
+
+unwrapTest(
+    "nullable supports undefined as input, but returns null as output",
+    { favoriteColor: nullableT(stringT) },
+    { favoriteColor: undefined },
+    { favoriteColor: null },
+);
+
 const { withDefault: withDefaultT } = types;
 unwrapTest(
     "supports default values",

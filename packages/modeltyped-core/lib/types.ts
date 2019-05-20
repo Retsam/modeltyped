@@ -22,13 +22,21 @@ export const string: TypeDefinition<string, string> = value<string>();
 export const number: TypeDefinition<number, number> = value<number>();
 export const boolean: TypeDefinition<boolean, boolean> = value<boolean>();
 
-export function optional<In, Out>({
-    toJSON,
-    fromJSON,
-}: TypeDefinition<In, Out>): TypeDefinition<In | undefined, Out | undefined> {
+export function optional<In, Out>(
+    type: TypeDefinition<In, Out>,
+): TypeDefinition<In | undefined | null, Out | undefined, In | undefined> {
     return {
-        fromJSON: i => (i == null ? undefined : fromJSON(i)),
-        toJSON: i => (i == null ? undefined : toJSON(i)),
+        fromJSON: i => (i == null ? undefined : type.fromJSON(i)),
+        toJSON: i => (i == null ? undefined : type.toJSON(i)),
+    };
+}
+
+export function nullable<In, Out>(
+    type: TypeDefinition<In, Out>,
+): TypeDefinition<In | undefined | null, Out | null, In | null> {
+    return {
+        fromJSON: i => (i == null ? null : type.fromJSON(i)),
+        toJSON: i => (i == null ? null : type.toJSON(i)),
     };
 }
 
