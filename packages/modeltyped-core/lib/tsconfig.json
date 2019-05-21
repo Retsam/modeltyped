@@ -4,6 +4,6 @@
       "target": "es5",
       "types": [],
       "composite": true,
-      "outDir": "../dist/lib",
+      "outDir": "../build/lib",
     }
   }

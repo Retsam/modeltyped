@@ -1,5 +1,6 @@
 node_modules
 .npmrc
 dist
+build
 .rpt2_cache
 .DS_Store

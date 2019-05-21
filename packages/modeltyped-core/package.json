@@ -14,8 +14,8 @@
   ],
   "scripts": {
     "build": "npx tsc --build tsconfig.json",
-    "dist": "npx rollup -c",
-    "run_tests": "NODE_PATH=dist/lib npx ava",
+    "dist": "rm -rf dist && npx rollup -c",
+    "run_tests": "NODE_PATH=build/lib npx ava",
     "test": "npm run build && npm run run_tests"
   },
   "dependencies": {
