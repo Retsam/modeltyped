@@ -1,7 +1,13 @@
 export interface TypeDefinition<Input, Instance, Output = Input> {
     fromJSON: (t: Input) => Instance;
     toJSON: (u: Instance) => Output;
+    update?: (newVal: Input, prevVal: Instance) => Instance;
 }
+
+export const updateType = <Input, Instance, Output>(
+    t: TypeDefinition<Input, Instance, Output>,
+    { oldValue, newValue }: { oldValue: Instance; newValue: Input },
+) => (t.update ? t.update(newValue, oldValue) : t.fromJSON(newValue));
 
 // Utility types for extracting the type params from TypeDefinition
 export type TypeDefInput<
@@ -13,7 +19,3 @@ export type TypeDefInstance<
 export type TypeDefOutput<
     T extends TypeDefinition<any, any, any>
 > = T extends TypeDefinition<any, any, infer O> ? O : never;
-
-// Right now, rollup-plugin-typescript2 isn't emitting typings for types-only files.
-// As a temporary hack, add a pointless export here
-export const __typeDefRollupHack = true;

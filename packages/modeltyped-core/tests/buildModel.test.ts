@@ -1,5 +1,5 @@
 import test from "ava";
-import { buildModel, types } from "../lib/modeltyped";
+import { buildModel, types, TypeDefinition } from "../lib/modeltyped";
 
 const { string: stringT, optional: optionalT, number: numberT } = types;
 
@@ -88,4 +88,38 @@ test("can define extras that reference other extras", t => {
     const model = TestModel.create({ value: "hodor" });
     t.assert(model.loudValue === "HODOR");
     t.assert(model.loudValueTwice === "HODOR HODOR");
+});
+
+test("can update the model with new data", t => {
+    const model = buildModel({
+        foo: stringT,
+        bar: numberT,
+    }).create({
+        foo: "foo",
+        bar: 0,
+    });
+
+    model.update({ foo: "FOO", bar: 1 });
+
+    t.deepEqual(model.toJSON(), {
+        foo: "FOO",
+        bar: 1,
+    });
+});
+
+const appendOnUpdate: TypeDefinition<string, string> = {
+    toJSON: s => s,
+    fromJSON: s => s,
+    update: (newVal, oldVal) => oldVal + newVal,
+};
+
+test("types can specify custom update logic", t => {
+    const model = buildModel({
+        foo: appendOnUpdate,
+    }).create({
+        foo: "Foo",
+    });
+
+    model.update({ foo: "Bar" });
+    t.is(model.foo, "FooBar");
 });
