@@ -3,6 +3,7 @@ import {
     TypeDefInput,
     TypeDefOutput,
     TypeDefInstance,
+    updateType,
 } from "./typeDefinition";
 import { OptionalFromUndefined, mapValues } from "./tsUtils";
 import assign from "lodash.assign";
@@ -22,6 +23,7 @@ export type ModelInstance<Props extends PropertiesDefs, Extras> = {
 } & {
     toJSON(): ModelOutputData<Props>;
     unwrap(): ModelOutputData<Props>;
+    update(data: ModelConstructorData<Props>): void;
 } & Extras;
 
 type ExtenderFunc<
@@ -66,11 +68,27 @@ export class ModelDefinition<
             ...props,
             toJSON,
             unwrap: toJSON,
+            update: newData => this.update(instance, newData),
         } as ModelInstance<Props, Extras>;
+
         for (const extenderFunc of this.extenderFuncs) {
             assign(instance, extenderFunc(instance));
         }
         return instance;
+    }
+
+    // Instance method on created models, partially applied with self in the create function
+    private update(
+        self: ModelInstance<Props, Extras>,
+        newData: ModelConstructorData<Props>,
+    ) {
+        Object.keys(this.props).forEach(propName => {
+            const propType = this.props[propName];
+            const oldValue = self[propName];
+            const newValue = (newData as any)[propName];
+            self[propName] = updateType(propType, { newValue, oldValue });
+        });
+        return self;
     }
 
     static buildModel<Props extends PropertiesDefs>(

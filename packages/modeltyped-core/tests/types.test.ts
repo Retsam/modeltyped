@@ -133,6 +133,42 @@ unwrapTest(
     { person: { firstName: "Bob", lastName: "Ross" } },
 );
 
+const appendOnUpdate: TypeDefinition<string, string> = {
+    toJSON: s => s,
+    fromJSON: s => s,
+    update: (newVal, oldVal) => oldVal + newVal,
+};
+
+test("records update in place", t => {
+    const model = buildModel({
+        record: recordT({
+            foobar: appendOnUpdate,
+            baz: stringT,
+        }),
+    }).create({
+        record: {
+            foobar: "foo",
+            baz: "baz",
+        },
+    });
+    const record = model.record;
+
+    model.update({
+        record: {
+            foobar: "bar",
+            baz: "BAZ",
+        },
+    });
+
+    //Update has not affect referential identity
+    t.assert(record === model.record);
+    // Values have updated as expected
+    t.deepEqual(record, {
+        foobar: "foobar",
+        baz: "BAZ",
+    });
+});
+
 const { model: modelT } = types;
 test("supports sub-models", t => {
     const Contact = buildModel({
@@ -153,4 +189,23 @@ test("supports sub-models", t => {
         toJSON(Contact.create({ firstName: "Arya", lastName: "Stark" })),
         { firstName: "Arya", lastName: "Stark" },
     );
+});
+
+test("supports sub-models updating", t => {
+    const SubModel = buildModel({ foobar: appendOnUpdate });
+    const model = buildModel({
+        subModel: modelT(SubModel),
+    }).create({
+        subModel: { foobar: "foo" },
+    });
+
+    const subModel = model.subModel;
+    model.update({
+        subModel: { foobar: "bar" },
+    });
+    //Update has not affect referential identity
+    t.is(subModel, model.subModel);
+    t.deepEqual(subModel.unwrap(), {
+        foobar: "foobar",
+    });
 });
