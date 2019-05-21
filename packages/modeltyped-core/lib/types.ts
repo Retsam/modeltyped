@@ -3,6 +3,7 @@ import {
     TypeDefInput,
     TypeDefOutput,
     TypeDefInstance,
+    updateType,
 } from "./typeDefinition";
 import {
     ModelDefinition,
@@ -73,6 +74,15 @@ export function record<
             mapValues(obj, ({ fromJSON }, key) => fromJSON(input[key])),
         toJSON: output =>
             mapValues(obj, ({ toJSON }, key) => toJSON(output[key])),
+        // Keep the same object, but update its props with updated values
+        update: (newValues, self) =>
+            (Object.keys(obj) as Array<keyof Obj>).reduce((self, key) => {
+                const typeDef = obj[key];
+                const oldValue = self[key];
+                const newValue = newValues[key];
+                self[key] = updateType(typeDef, { oldValue, newValue });
+                return self;
+            }, self),
     };
 }
 
@@ -93,5 +103,6 @@ export function model<M extends ModelDefinition<any, any>>(
     return {
         fromJSON: input => Model.create(input),
         toJSON: model => model.toJSON(),
+        update: (newData, prevModel) => prevModel.update(newData),
     };
 }
