@@ -24,18 +24,22 @@ export const number = value<number>();
 export const boolean = value<boolean>();
 export const primitive = value<string | number | boolean>();
 
-export function optional<In, Out>(
-    type: TypeDefinition<In, Out>,
-): TypeDefinition<In | undefined | null, Out | undefined, In | undefined> {
+export function optional<In, Instance, Out>(
+    type: TypeDefinition<In, Instance, Out>,
+): TypeDefinition<
+    In | undefined | null,
+    Instance | undefined,
+    Out | undefined
+> {
     return {
         fromJSON: i => (i == null ? undefined : type.fromJSON(i)),
         toJSON: i => (i == null ? undefined : type.toJSON(i)),
     };
 }
 
-export function nullable<In, Out>(
-    type: TypeDefinition<In, Out>,
-): TypeDefinition<In | undefined | null, Out | null, In | null> {
+export function nullable<In, Instance, Out>(
+    type: TypeDefinition<In, Instance, Out>,
+): TypeDefinition<In | undefined | null, Instance | null, Out | null> {
     return {
         fromJSON: i => (i == null ? null : type.fromJSON(i)),
         toJSON: i => (i == null ? null : type.toJSON(i)),
