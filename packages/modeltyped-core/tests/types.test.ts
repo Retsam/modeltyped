@@ -35,9 +35,10 @@ unwrapTest(
         str: stringT,
         num: numberT,
         bool: booleanT,
+        any: types.primitive,
     },
-    { str: "string", num: 5, bool: true },
-    { str: "string", num: 5, bool: true },
+    { str: "string", num: 5, bool: true, any: "foo" },
+    { str: "string", num: 5, bool: true, any: "foo" },
 );
 
 const { optional: optionalT } = types;

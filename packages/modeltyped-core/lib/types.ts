@@ -19,9 +19,10 @@ export function value<T>(): TypeDefinition<T, T> {
         toJSON: t => t,
     };
 }
-export const string: TypeDefinition<string, string> = value<string>();
-export const number: TypeDefinition<number, number> = value<number>();
-export const boolean: TypeDefinition<boolean, boolean> = value<boolean>();
+export const string = value<string>();
+export const number = value<number>();
+export const boolean = value<boolean>();
+export const primitive = value<string | number | boolean>();
 
 export function optional<In, Out>(
     type: TypeDefinition<In, Out>,
