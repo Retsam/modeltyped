@@ -26,11 +26,15 @@ export type ModelInstance<Props extends PropertiesDefs, Extras> = {
     update(data: ModelConstructorData<Props>): void;
 } & Extras;
 
+// .extend can override props, but the `& Partial<ModelInstance<Props, Extras>>`
+//   enforces that it can only override with subtypes
 type ExtenderFunc<
     Props extends PropertiesDefs,
     Extras extends object,
     MoreExtras extends object
-> = (self: ModelInstance<Props, Extras>) => MoreExtras;
+> = (
+    self: ModelInstance<Props, Extras>,
+) => MoreExtras & Partial<ModelInstance<Props, Extras>>;
 
 export class ModelDefinition<
     Props extends PropertiesDefs,

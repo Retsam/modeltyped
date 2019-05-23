@@ -90,6 +90,20 @@ test("can define extras that reference other extras", t => {
     t.assert(model.loudValueTwice === "HODOR HODOR");
 });
 
+test("extend can replace properties with subtypes", t => {
+    const model = buildModel({
+        value: types.primitive,
+    })
+        .extend(() => {
+            return {
+                value: "hardcoded",
+            };
+        })
+        .create({ value: false });
+
+    t.assert(model.value.toUpperCase() === "HARDCODED");
+});
+
 test("can update the model with new data", t => {
     const model = buildModel({
         foo: stringT,
