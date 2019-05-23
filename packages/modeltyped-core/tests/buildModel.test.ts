@@ -104,6 +104,23 @@ test("extend can replace properties with subtypes", t => {
     t.assert(model.value.toUpperCase() === "HARDCODED");
 });
 
+test("extend can access the raw data provided to the model", t => {
+    const TestModel = buildModel({
+        value: types.withDefault(stringT, "DefaultVal"),
+    }).extend((_self, data) => {
+        return {
+            valueWasProvided: data.value !== undefined,
+        };
+    });
+    const t1 = TestModel.create({});
+    t.is(t1.value.toUpperCase(), "DEFAULTVAL");
+    t.false(t1.valueWasProvided);
+
+    const t2 = TestModel.create({ value: "DefaultVal" });
+    t.is(t2.value.toUpperCase(), "DEFAULTVAL");
+    t.true(t2.valueWasProvided);
+});
+
 test("can update the model with new data", t => {
     const model = buildModel({
         foo: stringT,

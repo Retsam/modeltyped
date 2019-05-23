@@ -34,6 +34,7 @@ type ExtenderFunc<
     MoreExtras extends object
 > = (
     self: ModelInstance<Props, Extras>,
+    data: ModelConstructorData<Props>,
 ) => MoreExtras & Partial<ModelInstance<Props, Extras>>;
 
 export class ModelDefinition<
@@ -76,7 +77,7 @@ export class ModelDefinition<
         } as ModelInstance<Props, Extras>;
 
         for (const extenderFunc of this.extenderFuncs) {
-            assign(instance, extenderFunc(instance));
+            assign(instance, extenderFunc(instance, data));
         }
         return instance;
     }
