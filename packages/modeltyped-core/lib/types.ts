@@ -46,15 +46,26 @@ export function nullable<In, Instance, Out>(
     };
 }
 
-export function withDefault<In, Instance, Out>(
-    { toJSON, fromJSON }: TypeDefinition<In, Instance, Out>,
-    defaultValue: NoInfer<In>, // Ensure that In is inferred from the TypeDefinition, not the default value
-): TypeDefinition<In | undefined | null, Instance, Out> {
+// Utility for building types that apply a filter to the input value
+export function inputFilter<OuterInput, InnerInput, Instance, Out>(
+    t: TypeDefinition<InnerInput, Instance, Out>,
+    filter: (input: OuterInput) => InnerInput,
+): TypeDefinition<OuterInput, Instance, Out> {
     return {
-        fromJSON: i => fromJSON(i == null ? defaultValue : i),
-        toJSON,
+        fromJSON: i => t.fromJSON(filter(i)),
+        toJSON: t.toJSON,
+        update: (newValue, oldValue) =>
+            updateType(t, { oldValue, newValue: filter(newValue) }),
     };
 }
+
+export const withDefault = <In, Instance, Out>(
+    t: TypeDefinition<In, Instance, Out>,
+    defaultValue: NoInfer<In>, // Ensure that In is inferred from the TypeDefinition, not the default value
+) =>
+    inputFilter(t, (value: In | undefined | null) =>
+        value == null ? defaultValue : value,
+    );
 
 export function array<In, Out, Value = In>(
     s: TypeDefinition<In, Out, Value>,
