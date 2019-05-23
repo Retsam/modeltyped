@@ -133,6 +133,14 @@ unwrapTest(
     { person: { firstName: "Bob", lastName: "Ross" } },
 );
 
+unwrapTest(
+    "records handle undefined values gracefully",
+    { options: withDefaultT(recordT({ verbose: optionalT(booleanT) }), {}) },
+    // verbose can be omitted since it supports `undefined` as a possible value
+    { options: {} },
+    { options: { verbose: undefined } },
+);
+
 const appendOnUpdate: TypeDefinition<string, string> = {
     toJSON: s => s,
     fromJSON: s => s,

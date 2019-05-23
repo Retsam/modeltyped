@@ -11,7 +11,7 @@ import {
     ModelInstance,
     ModelOutputData,
 } from "./buildModel";
-import { mapValues, NoInfer } from "./tsUtils";
+import { mapValues, NoInfer, OptionalFromUndefined } from "./tsUtils";
 
 export function value<T>(): TypeDefinition<T, T> {
     return {
@@ -65,13 +65,16 @@ export function record<
 >(
     obj: Obj,
 ): TypeDefinition<
-    { [K in keyof Obj]: TypeDefInput<Obj[K]> },
+    OptionalFromUndefined<{ [K in keyof Obj]: TypeDefInput<Obj[K]> }>,
     { [K in keyof Obj]: TypeDefInstance<Obj[K]> },
     { [K in keyof Obj]: TypeDefOutput<Obj[K]> }
 > {
     return {
         fromJSON: input =>
-            mapValues(obj, ({ fromJSON }, key) => fromJSON(input[key])),
+            mapValues(obj, ({ fromJSON }, key) =>
+                // Any cast needed due to the OptionalFromUndefined
+                fromJSON((input as any)[key]),
+            ),
         toJSON: output =>
             mapValues(obj, ({ toJSON }, key) => toJSON(output[key])),
         // Keep the same object, but update its props with updated values
@@ -79,7 +82,7 @@ export function record<
             (Object.keys(obj) as Array<keyof Obj>).reduce((self, key) => {
                 const typeDef = obj[key];
                 const oldValue = self[key];
-                const newValue = newValues[key];
+                const newValue = (newValues as any)[key];
                 self[key] = updateType(typeDef, { oldValue, newValue });
                 return self;
             }, self),
