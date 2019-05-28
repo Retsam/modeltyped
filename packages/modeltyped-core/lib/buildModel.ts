@@ -28,7 +28,7 @@ export type ModelInstance<Props extends PropertiesDefs, Extras> = {
 
 // .extend can override props, but the `& Partial<ModelInstance<Props, Extras>>`
 //   enforces that it can only override with subtypes
-type ExtenderFunc<
+export type ExtenderFunc<
     Props extends PropertiesDefs,
     Extras extends object,
     MoreExtras extends object
