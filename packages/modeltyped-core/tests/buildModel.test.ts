@@ -121,6 +121,24 @@ test("extend can access the raw data provided to the model", t => {
     t.true(t2.valueWasProvided);
 });
 
+test("can add props to models", t => {
+    const SquareModel = buildModel({
+        width: numberT,
+    });
+    const RectangleModel = SquareModel.extendProps({
+        height: numberT,
+    });
+    const square = SquareModel.create({ width: 5 });
+    const rect = RectangleModel.create({ width: 2, height: 6 });
+    t.deepEqual(square.toJSON(), {
+        width: 5,
+    });
+    t.deepEqual(rect.toJSON(), {
+        width: 2,
+        height: 6,
+    });
+});
+
 test("can update the model with new data", t => {
     const model = buildModel({
         foo: stringT,

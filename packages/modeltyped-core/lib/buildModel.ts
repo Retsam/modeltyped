@@ -47,7 +47,7 @@ export class ModelDefinition<
          * actions).  On construction of a model, they will be called in order with and their return
          * values will be mixed into the instance.
          */
-        private extenderFuncs: Array<ExtenderFunc<Props, any, any>>,
+        private extenderFuncs: Array<ExtenderFunc<any, any, any>>,
     ) {}
 
     extend<MoreExtras extends object>(
@@ -57,6 +57,16 @@ export class ModelDefinition<
             this.props,
             this.extenderFuncs.concat(extender),
         );
+    }
+
+    extendProps<MoreProps extends PropertiesDefs>(
+        moreProps: MoreProps,
+    ): ModelDefinition<Props & MoreProps, Extras> {
+        const newProps = {
+            ...this.props,
+            ...moreProps,
+        };
+        return new ModelDefinition(newProps, this.extenderFuncs);
     }
 
     create(data: ModelConstructorData<Props>): ModelInstance<Props, Extras> {
