@@ -67,6 +67,16 @@ export const withDefault = <In, Instance, Out>(
         value == null ? defaultValue : value,
     );
 
+/**
+ * Excludes a property from the output. The key will be in the output, but the value will be undefined.
+ */
+export const excludeFromOutput = <I, V>({
+    fromJSON,
+}: TypeDefinition<I, V, any>): TypeDefinition<I, V, undefined> => ({
+    fromJSON,
+    toJSON: () => undefined,
+});
+
 export function array<In, Out, Value = In>(
     s: TypeDefinition<In, Out, Value>,
 ): TypeDefinition<In[], Out[], Value[]> {

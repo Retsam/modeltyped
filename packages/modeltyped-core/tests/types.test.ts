@@ -106,6 +106,22 @@ test("defaultT supports asymetric types", t => {
     t.assert(typeWithDefaultNumber.toJSON(42) === 42);
 });
 
+const { excludeFromOutput: excludeFromOutputT } = types;
+unwrapTest(
+    "can exclude properties from output",
+    {
+        inputOnlyString: excludeFromOutputT(stringT),
+        inputOnlyNumber: optionalT(excludeFromOutputT(numberT)),
+    },
+    {
+        inputOnlyString: "test",
+    },
+    {
+        inputOnlyNumber: undefined,
+        inputOnlyString: undefined,
+    },
+);
+
 const { array: arrayT } = types;
 unwrapTest(
     "supports array types",
