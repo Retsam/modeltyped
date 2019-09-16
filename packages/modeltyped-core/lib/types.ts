@@ -19,10 +19,16 @@ export function value<T>(): TypeDefinition<T, T> {
         toJSON: t => t,
     };
 }
+export const valueT = value;
+
 export const string = value<string>();
+export const stringT = string;
 export const number = value<number>();
+export const nubmerT = number;
 export const boolean = value<boolean>();
+export const booleanT = boolean;
 export const primitive = value<string | number | boolean>();
+export const primitiveT = primitive;
 
 export function optional<In, Instance, Out>(
     type: TypeDefinition<In, Instance, Out>,
@@ -36,6 +42,7 @@ export function optional<In, Instance, Out>(
         toJSON: i => (i == null ? undefined : type.toJSON(i)),
     };
 }
+export const optionalT = optional;
 
 export function nullable<In, Instance, Out>(
     type: TypeDefinition<In, Instance, Out>,
@@ -45,6 +52,7 @@ export function nullable<In, Instance, Out>(
         toJSON: i => (i == null ? null : type.toJSON(i)),
     };
 }
+export const nullableT = nullable;
 
 // Utility for building types that apply a filter to the input value
 export function inputFilter<OuterInput, InnerInput, Instance, Out>(
@@ -58,6 +66,7 @@ export function inputFilter<OuterInput, InnerInput, Instance, Out>(
             updateType(t, { oldValue, newValue: filter(newValue) }),
     };
 }
+export const inputFilterT = inputFilter;
 
 export const withDefault = <In, Instance, Out>(
     t: TypeDefinition<In, Instance, Out>,
@@ -66,6 +75,7 @@ export const withDefault = <In, Instance, Out>(
     inputFilter(t, (value: In | undefined | null) =>
         value == null ? defaultValue : value,
     );
+export const withDefaultT = withDefault;
 
 /**
  * Excludes a property from the output. The key will be in the output, but the value will be undefined.
@@ -76,6 +86,7 @@ export const excludeFromOutput = <I, V>({
     fromJSON,
     toJSON: () => undefined,
 });
+export const excludeFromOutputT = excludeFromOutput;
 
 export function array<In, Out, Value = In>(
     s: TypeDefinition<In, Out, Value>,
@@ -85,6 +96,7 @@ export function array<In, Out, Value = In>(
         toJSON: t => t.map(s.toJSON),
     };
 }
+export const arrayT = array;
 
 export function record<
     Obj extends Record<string, TypeDefinition<any, any, any>>
@@ -114,6 +126,7 @@ export function record<
             }, self),
     };
 }
+export const recordT = record;
 
 type ModelProps<
     M extends ModelDefinition<any, any>
@@ -135,3 +148,4 @@ export function model<M extends ModelDefinition<any, any>>(
         update: (newData, prevModel) => prevModel.update(newData),
     };
 }
+export const modelT = model;
